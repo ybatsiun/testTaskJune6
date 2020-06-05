@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
-import MaterialTable from 'material-table'
+import MaterialTable from 'material-table';
+
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonsBar: {
         paddingTop: '22px'
+    },
+    card: {
+        minWidth: 200,
+        minHeight: 200
     }
 }));
 
@@ -35,29 +43,38 @@ export default function TransactionsTable({ fetchTransactions, transactionsFromG
         setselectedTransAction(transaction)
     }
 
-    return <>
-        <MaterialTable
-            onRowClick={onTransactionRowClick}
-            className={classes.paper}
-            title='Transactions history'
-            data={transactionsFromGlobalState.transactions}
-            columns={[
-                { title: 'Id', field: 'id' },
-                { title: 'Type', field: 'type' },
-                { title: 'Amount', field: 'amount', type: 'numeric' },
-                { title: 'Date', field: 'effectiveDate' },
-            ]}
-        />
-
-        {selectedTransAction && <div>
-            Amount: {selectedTransAction.amount}
-            <br />
-            Type: {selectedTransAction.type}
-            <br />
-            Date: {selectedTransAction.effectiveDate}
-            <br />
-            Id: {selectedTransAction.id}
-            <br />
-        </div>}
-    </>
+    return <Grid container spacing={1}>
+        <Grid item xs={6}>
+            <MaterialTable
+                onRowClick={onTransactionRowClick}
+                className={classes.paper}
+                title='Transactions history'
+                data={transactionsFromGlobalState.transactions}
+                columns={[
+                    { title: 'Type', field: 'type' },
+                    { title: 'Amount', field: 'amount', type: 'numeric' },
+                ]}
+                options={{
+                    search: false
+                }}
+            />
+        </Grid>
+        <Grid item xs={6}>
+            {selectedTransAction && <Card >
+                <CardContent className={classes.root}>
+                    <Typography color="textSecondary" gutterBottom>
+                        Amount: {selectedTransAction.amount}
+                        <br />
+                        Type: {selectedTransAction.type}
+                        <br />
+                        Date: {selectedTransAction.effectiveDate}
+                        <br />
+                        Id: {selectedTransAction.id}
+                        <br />
+                    </Typography>
+                </CardContent>
+            </Card>
+            }
+        </Grid>
+    </Grid >
 }
